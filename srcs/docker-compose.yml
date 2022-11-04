@@ -1,0 +1,120 @@
+#This is a file that will contain instructions needed to start and configure the services
+#we can install multi containers thanks to docker-compose
+#<docke-compose.yml> file contains the service definitions for setup. 
+#A <service> in Compose is a running container and service definitions specify info about how each container will run.
+
+#latest version of docker-compose
+version: '3.9'
+
+#1 service - 1 container
+services:
+  #######MARIADB IMAGE#######
+  mariadb:
+  #name of the database container
+    container_name: mariadb
+
+    #<build> means the path to Dockerfile , that we use for creating an image to launch a service
+    build: ./servers/mariadb
+
+    #<restart> restarts all stopped and running services or the specifies ones only. Restarts service if it terminates
+    restart: always
+
+    #<env> is used to adjust the env of the docker-compose command itself.Adds env vars to the container based on file content
+    #It is useful for var inside YAML file that need to be expanded, or vars used by compose itself.
+    env_file: .env
+
+    #<volumes> basically mounts the volume db from host into /var/lib/mysql in the running mariadb container
+    volumes:
+      - db:/var/lib/mysql
+    
+    #<networks> we make sure that the containers we want to talk to each other are on the same network.
+    #Networks are first-class docker construct,and not specific to compose.
+    networks:
+      - startup
+
+  ####### WORDPRESS IMAGE#######
+  wordpress:
+    container_name: wordpress
+
+    build: ./servers/wordpress
+
+    env_file: .env
+
+    #<volumes> for persisting database data , a volume is created
+    #the docker volume <db> persists any updates made by Wordpress to the database
+    #wp contains all user-supplied content. Basically anything we can upload to site ends up here.
+    volumes:
+      - wp:/var/html/wordpress
+
+    #we add container wordpress to the start-up network
+    #it specifies that our application service will join the app-network network, which we vwill define at the bottom of the file.
+    networks:
+      - startup
+
+    #<depends_on> expresses startup and shutdown dependencies between services
+    #Compose implementations must create services in dependency order.
+    #<depends_on> decides the dependency and the order of container creation.
+    depends_on:
+      - mariadb
+
+  ####### NGINX IMAGE#######
+  nginx:
+    container_name: nginx
+
+    build: ./servers/nginx
+
+    hostname: localhost
+
+    volumes:
+      - wp:/var/html/wordpress
+    
+    networks:
+      - startup
+
+    depends_on:
+      - wordpress
+
+    #<ports> sets host IP, host port and container port in the form:
+    #[HOST(our computer): ] : CONTAINER[/PROTOCOL]
+    #we define this port to map the container to the local machine.
+    ports:
+      - "443:443"
+
+
+  #named volumes. The path to the actual volume is handled by docker internals and the contents of that volume will
+  #persist through the containers lifecycle even when stopped/removed. The top-level volumes must be removed manually.
+  #<volumes> allows for more detailed configuration of each volume that is defined. 
+  #If we use volume driver we can provide options for it. Then in each service, we can reference the volume by name
+  #without having to specify the options again.If we have multiple services using volume we change the definition of it in one place
+  #Volume section allows the configuration of named volumes that can be reused across multiple services.
+  #DRIVER ---> specify which volume driver should be used for this volume.
+  #DRIVER_OPTS ---> specifies a list of options as key-value pairs to pass to the driver for this volume.
+  #Those options are driver-dependent.
+volumes:
+  db:
+    name: db
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /home/rkultaev/data/mysql
+  wp:
+    name: wp
+    # driver: local
+    # driver_opts:
+    #   type: none
+    #   o: bind
+    #   device: /home/rkultaev/data/wordpress
+
+
+  #NEtworks are the layer that allow services to communicate with each other.
+  #NETWORKS can be created by specifying the network name under a top-level networks section.
+  #Services can connect to networks by specifying the network name under the service networks subsection.
+  #With help of bridge network mariadb,nginx and db can communicate with each other and we just need to open port 440 for external access to application
+networks:
+  startup:
+    driver: bridge
+
+
+
+

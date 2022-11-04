@@ -1,0 +1,56 @@
+# server{} - the server context is nested inside the http context and used for configuring specific virtual servers
+# within a single host. A server is considered a virtual host.
+server {
+	#<listen> is one of the ways to identify the correct server context within a configuration
+	#certbot is instructing NGINX to listen for any HTTPS request on port 443
+	listen 443 ssl;
+	listen [::]:443 ssl;
+
+	#<server_name> defines name of server and server block, that are used for the requests to my server
+	server_name rkultaev.42.fr;
+
+	#<ssl_certificate> directive is used for indication location of certificate and 
+	#private key file on the server
+	ssl_certificate /etc/ssl/certs/nginx.key;
+	ssl_certificate_key /etc/ssl/certs/nginx.crt;
+	ssl_protocols TLSv1.3;
+
+	#<index>
+	#NGINX by default looks for an index.html to serve. But in the project, index.php.
+	#So by writing [index index.php] I instruct NGINX to use [index.php] as root instead
+	#In case [index index.php index.html] NGINX will first look for index.php.
+	#If it doesn't find that file, it will look for [index.html] file
+	index index.php index.html;
+
+	#<root> directive is used for declaring the root directory for a site.
+	#By writing /var/www/html/wordpress Im telling NGINX to look for files to serve inside 
+	#that directory if any request comes to server.
+	#Its the mountpoint while building with instructions to dockerfile wp
+	root /var/www/html/wordpress;
+
+	#By writing <location> defines how NGINX should handle requests for different resources
+	#and URIS for parent server
+	#Instance where processing location may be reevaluated is with <try_files> directive.
+	#This directive tells NGINX to check for existence of a named set of files or dirs.
+	#Last parameter can be URI that NGINX will make an internal redirect to.
+	location / {
+		try_files uri $uri/ /index.php$is_args$args;
+	}
+	#To create NGINX server block that will make use of FPM pool , we edit config file and pass the path 
+	#of pool's socket file using option [fastcgi_pass] inside location block for php
+	#[fastcgi_pass] is used to pass a request to a FastCGI service.
+	#PHP-FPM service by default runs on port 9000 of the host.
+	location ~ \.php$ {
+		#The =404 indicates error to throw if none of files are found
+		try-files $uri =404
+		#<fastcgi_split_path_info> regex capable to correctly handle request like /test.php/foo/blah.php or /test.php/.
+
+		fastcgi_split_path_info ^(.+\.php)(/.+)$;
+		fastcgi_pass wordpress:9000
+		fastcgi_index index.php
+		include fastcgi_params;
+		# SCRIPT_FILENAME parameter is required as its passed to PHP FPM to determine script name.
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param PATH_INFO $fastcgi_path_info;
+	}
+}

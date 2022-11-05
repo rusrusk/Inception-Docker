@@ -9,6 +9,7 @@ RUN apt install -y mariadb-server
 
 #COPY [--chown=<user>:<group>] <src>... <dest>
 #The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
+<<<<<<< HEAD
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 COPY ./tools /var/www/
 
@@ -22,3 +23,5 @@ RUN service mysql start && mysql < /var/www/createdb.sql && rm -f /var/www/creat
 #<CMD> instruction should be used to run software contained in the image, along with any arguments.
 #The main purpose is to provide defaults for an executing container.
 CMD /usr/bin/mysqld_safe
+=======
+>>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2

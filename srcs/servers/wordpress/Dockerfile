@@ -18,7 +18,7 @@ COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
 COPY ./tools /var/www/
 
 # We copy our index.html file into the /var/www/index.html. Static website
-COPY conf/index.html /var/www/index.html
+# COPY conf/index.html /var/www/index.html
 
 #<EXPOSE> instruction indicates the ports on which a container listens for conntections.
 #We should use traditional port for our application

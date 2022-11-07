@@ -14,11 +14,7 @@ services:
     container_name: mariadb
 
     #<build> means the path to Dockerfile , that we use for creating an image to launch a service
-<<<<<<< HEAD
     build: ./servers/mariadb
-=======
-    build: ./server/mariadb
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
 
     #<restart> restarts all stopped and running services or the specifies ones only. Restarts service if it terminates
     restart: always
@@ -40,11 +36,7 @@ services:
   wordpress:
     container_name: wordpress
 
-<<<<<<< HEAD
     build: ./servers/wordpress
-=======
-    build: ./server/wordpress
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
 
     env_file: .env
 
@@ -52,42 +44,37 @@ services:
     #the docker volume <db> persists any updates made by Wordpress to the database
     #wp contains all user-supplied content. Basically anything we can upload to site ends up here.
     volumes:
-      - wp:/var/html/wordpress
+      - wp:/var/www/html/wordpress
 
     #we add container wordpress to the start-up network
     #it specifies that our application service will join the app-network network, which we vwill define at the bottom of the file.
     networks:
       - startup
 
+    ports:
+      - "9000:9000"
     #<depends_on> expresses startup and shutdown dependencies between services
     #Compose implementations must create services in dependency order.
     #<depends_on> decides the dependency and the order of container creation.
     depends_on:
       - mariadb
 
+
   ####### NGINX IMAGE#######
   nginx:
     container_name: nginx
 
-<<<<<<< HEAD
     build: ./servers/nginx
-=======
-    build: ./server/nginx
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
 
     hostname: localhost
 
     volumes:
-      - wp:/var/html/wordpress
+      - wp:/var/www/html/wordpress
     
     networks:
       - startup
 
-<<<<<<< HEAD
     depends_on:
-=======
-    depends-on:
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
       - wordpress
 
     #<ports> sets host IP, host port and container port in the form:
@@ -106,47 +93,31 @@ services:
   #DRIVER ---> specify which volume driver should be used for this volume.
   #DRIVER_OPTS ---> specifies a list of options as key-value pairs to pass to the driver for this volume.
   #Those options are driver-dependent.
-<<<<<<< HEAD
 volumes:
   db:
     name: db
-    # driver: local
-    # driver_opts:
-    #   type: none
-    #   o: bind
-    #   device: /home/rkultaev/data/mysql
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/db
   wp:
     name: wp
-    # driver: local
-    # driver_opts:
-    #   type: none
-    #   o: bind
-    #   device: /home/rkultaev/data/wordpress
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/wp
 
-=======
-  volumes:
-    db:
-      name: db
-      driver: local
-      driver_opts:
-        type: none
-        o: bind
-        device: /home/rkultaev/data/wp
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
 
   #NEtworks are the layer that allow services to communicate with each other.
   #NETWORKS can be created by specifying the network name under a top-level networks section.
   #Services can connect to networks by specifying the network name under the service networks subsection.
   #With help of bridge network mariadb,nginx and db can communicate with each other and we just need to open port 440 for external access to application
-<<<<<<< HEAD
 networks:
   startup:
     driver: bridge
-=======
-  networks:
-    startup:
-      driver: bridge
->>>>>>> 8f53de3bb09112f482db485682e6cf6e4bc3fcf2
+
 
 
 

@@ -8,17 +8,19 @@ FROM debian:buster
 RUN apt update
 RUN apt install -y nginx openssl
 
-#COPY [--chown=<user>:<group>] <src>... <dest>
-#The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
-COPY ./conf/default /etc/nginx/sites-enabled/default
-COPY ./tools/launch.sh /var/www
-
-
-
 #<EXPOSE> instruction indicates the ports on which a container listens for conntections.
 #We should use traditional port for our application
 EXPOSE 443
 
+#COPY [--chown=<user>:<group>] <src>... <dest>
+#The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
+COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
+COPY ./tools/launch.sh /var/www
+
+
+
+
 #<CMD> instruction should be used to run software contained in the image, along with any arguments.
 #The main purpose is to provide defaults for an executing container.
+# CMD bash /var/www/launch.sh
 CMD bash /var/www/launch.sh

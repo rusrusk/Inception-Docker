@@ -12,8 +12,8 @@ all			:			up
 #Starts and defines all the services defines in docker-compose.yml in "detached" mode (-d)
 #Compose exits after starting the containers, but the containers continue to run the background.
 up	:		
-			@mkdir -p /home/rkultaev/data/db
-			@mkdir -p /home/rkultaev/data/db
+			@mkdir -p /home/${USER}/data/db
+			@mkdir -p /home/${USER}/data/db
 			@docker-compose -f srcs/docker-compose.yml up -d
 
 
@@ -43,15 +43,11 @@ fclean : down
 
 
 #Recreation and reset the services
-re :
-			@mkdir -p ../data/wp
-			@mkdir -p ../data/db
-			@docker-compose -f srcs/docker-compose.yml build
-			@docker-compose -f srcs/docker-compose.yml up
+re : fclean up
 
 
 #run .PHONY for commands that do not represent physical files in the file system
-.PHONY : all up down ps fclean re
+# .PHONY : all up down ps fclean re
 
 
 						

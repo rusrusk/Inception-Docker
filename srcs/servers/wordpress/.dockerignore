@@ -1,0 +1,9 @@
+# The file .dockerignore is a tool that can be used to refine the Docker build context.
+# Using this file we can set rules for excluding files from the build context, which
+# means reducing the time required to build a tar arhive and send to server
+
+# Before Docker CLI sends the context to the docker daemon, it looks for file named .dockeignore.
+# if the file exists, the CLI modifies context to exclude files and dirs that match patterns in it.
+
+.git
+.DS_Store

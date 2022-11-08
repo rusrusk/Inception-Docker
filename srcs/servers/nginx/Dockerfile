@@ -17,10 +17,8 @@ EXPOSE 443
 COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 COPY ./tools/launch.sh /var/www
 
-
-
+RUN chmod 777 /var/www/launch.sh
 
 #<CMD> instruction should be used to run software contained in the image, along with any arguments.
 #The main purpose is to provide defaults for an executing container.
-# CMD bash /var/www/launch.sh
-CMD bash /var/www/launch.sh
+CMD /var/www/launch.sh

@@ -14,7 +14,7 @@ all			:			up
 up	:		
 			@mkdir -p /home/${USER}/data/db
 			@mkdir -p /home/${USER}/data/db
-			@docker-compose -f srcs/docker-compose.yml up -d
+			@docker-compose -f srcs/docker-compose.yml up -d --build
 
 
 #<docker-compose down> will stop running containers, but also will remove stopped containers and

@@ -31,6 +31,7 @@ cd /var/www/html/wordpress;
 
 wp core download --allow-root;
 mv /var/www/wp-config.php /var/www/html/wordpress;
+mv /var/www/index.html /var/www/html/wordpress;
 echo "Wordpress: creating users..."
 # Creates WordPress tables in the database,
 # using the url, title and default admin user details provided

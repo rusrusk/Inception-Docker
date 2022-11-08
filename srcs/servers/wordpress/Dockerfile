@@ -8,17 +8,20 @@ FROM debian:buster
 # NGINX must rely on separate PHP processor to handle PHP requests. This processing is handled with [php.fpm]
 # a PHP processor that has been extensively tested to work with NGINX
 RUN apt update
-RUN apt install -y php7.3 php-mysqli php-fpm curl sendmail
+RUN apt install -y php7.3 php-mysqli php-fpm curl
 
 #COPY [--chown=<user>:<group>] <src>... <dest>
 #The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
 # Php-fpm service creates a default pool, the config-ion (www.conf) for which can be found in /etc/php/7.3/fpm/pool.d folder
-# 
+#
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
+#www where is commoin location for webpage file
 COPY ./tools /var/www/
 
+RUN chmod 777 /var/www/launch.sh
+
 # We copy our index.html file into the /var/www/index.html. Static website
-# COPY conf/index.html /var/www/index.html
+COPY ./conf/index.html /var/www/index.html
 
 #<EXPOSE> instruction indicates the ports on which a container listens for conntections.
 #We should use traditional port for our application
@@ -26,4 +29,4 @@ EXPOSE 9000
 
 #<CMD> instruction should be used to run software contained in the image, along with any arguments.
 #The main purpose is to provide defaults for an executing container.
-CMD bash /var/www/launch.sh
+CMD /var/www/launch.sh

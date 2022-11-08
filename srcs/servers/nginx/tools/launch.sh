@@ -5,7 +5,7 @@
 #<nodes>it tells to skip option to secure our certif with passphrase.
 #<days -365> it sets length of time that certif will be considered valid. We set one year
 #<newkey rsa:2048> it specifies we want to generate new certif and new key at the same time. 
-#<rsa2048> option tells it to make rsa key that is 4096 bits long
+#<rsa4096> option tells it to make rsa key that is 4096 bits long
 		#<keyout> it tells openssl where to place generated private key file that we create.
 		#<out> it tells openssl where to place certif that we create
 if [ ! -f /etc/ssl/certs/nginx.crt ]; then 
@@ -20,4 +20,3 @@ fi
 #For Docker containers <daemon off> directive tells NGINX to stays in foreground.
 #For containers it is useful as best practice is for 1 container = 1 process.
 nginx -g 'daemon off;';
-

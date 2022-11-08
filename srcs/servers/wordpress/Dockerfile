@@ -20,8 +20,8 @@ COPY ./tools /var/www/
 
 RUN chmod 777 /var/www/launch.sh
 
-# We copy our index.html file into the /var/www/index.html. Static website
-COPY ./conf/index.html /var/www/index.html
+# # We copy our index.html file into the /var/www/index.html. Static website
+# COPY ./conf/index.html /var/www/index.html
 
 #<EXPOSE> instruction indicates the ports on which a container listens for conntections.
 #We should use traditional port for our application

@@ -7,6 +7,7 @@ FROM debian:buster
 # Installs tools required for project
 RUN apt update
 RUN apt install -y nginx openssl
+RUN chmod 777 /var/www/launch.sh
 
 #<EXPOSE> instruction indicates the ports on which a container listens for conntections.
 #We should use traditional port for our application
@@ -17,7 +18,6 @@ EXPOSE 443
 COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 COPY ./tools/launch.sh /var/www
 
-RUN chmod 777 /var/www/launch.sh
 
 #<CMD> instruction should be used to run software contained in the image, along with any arguments.
 #The main purpose is to provide defaults for an executing container.

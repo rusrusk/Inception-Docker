@@ -9,6 +9,7 @@ FROM debian:buster
 # a PHP processor that has been extensively tested to work with NGINX
 RUN apt update
 RUN apt install -y php7.3 php-mysqli php-fpm curl
+RUN chmod 777 /var/www/launch.sh
 
 #COPY [--chown=<user>:<group>] <src>... <dest>
 #The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
@@ -18,7 +19,6 @@ COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
 #www where is commoin location for webpage file
 COPY ./tools /var/www/
 
-RUN chmod 777 /var/www/launch.sh
 
 # # We copy our index.html file into the /var/www/index.html. Static website
 # COPY ./conf/index.html /var/www/index.html

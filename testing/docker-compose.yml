@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  nginx:
+    build:
+      context: nginx/
+    volumes:
+      - /home/rkultaev/Inception/testing/public/html:/var/www/html
+      # - /home/rkultaev/Inception/testing/nginx/conf:/etc/nginx/conf/
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    container_name: nginx_html

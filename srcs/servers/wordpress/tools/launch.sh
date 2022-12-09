@@ -11,8 +11,6 @@ chown -R www-data /var/www/html/wordpress;
 mkdir -p /run/php/;
 touch /run/php/php7.3-fpm.pid;
 
-# php -S 0.0.0.0:9000 -t /var/www/html/wordpress
-
 # After checking the requirements, download the wp-cli.phar file using wget or curl:
 # then, make it executable and move it to PATH
 # Downloads and extracts the main WordPress files
@@ -31,7 +29,7 @@ cd /var/www/html/wordpress;
 
 wp core download --allow-root;
 mv /var/www/wp-config.php /var/www/html/wordpress;
-mv /var/www/index.html /var/www/html/wordpress;
+# mv /var/www/index.html /var/www/html/wordpress;
 echo "Wordpress: creating users..."
 # Creates WordPress tables in the database,
 # using the url, title and default admin user details provided

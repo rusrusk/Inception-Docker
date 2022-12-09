@@ -23,8 +23,6 @@ services:
     #It is useful for var inside YAML file that need to be expanded, or vars used by compose itself.
     env_file: .env
 
-    ports:
-      - "9000:9000"
 
     #<volumes> basically mounts the volume db from host into /var/lib/mysql in the running mariadb container
     volumes:
@@ -54,8 +52,6 @@ services:
     networks:
       - startup
 
-    ports:
-      - "9000:9000"
     #<depends_on> expresses startup and shutdown dependencies between services
     #Compose implementations must create services in dependency order.
     #<depends_on> decides the dependency and the order of container creation.

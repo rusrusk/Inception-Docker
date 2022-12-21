@@ -1,10 +1,10 @@
 FROM debian:buster
 
-RUN apt update; apt install -y nginx
+RUN apt update && apt install -y nginx
 
 
-COPY conf/nginx.conf /etc/nginx/conf/nginx.conf
+# WORKDIR /home/rkultaev/Inception/testing/nginx/conf.d
 
-COPY ./tools/launch.sh /var/www
+# COPY ./conf.d/nginx.conf /etc/nginx/conf.d/nginx.conf
 
-CMD bash /var/www/launch.sh
+ADD conf.d/nginx.conf /etc/nginx/conf.d

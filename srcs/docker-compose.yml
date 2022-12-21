@@ -7,19 +7,22 @@
 version: '3.9'
 
 #1 service - 1 container
+#services - computing components of an application
+#services communicate with each other through Networks.
 services:
   #######MARIADB IMAGE#######
   mariadb:
-  #name of the database container
+  #name of the custom database container
     container_name: mariadb
 
     #<build> means the path to Dockerfile , that we use for creating an image to launch a service
-    build: ./servers/mariadb
+    #mariadb and wordpress use the default images of WP and DB, provided directly by companies-no need to build own.
+    build: ./services/mariadb
 
-    #<restart> restarts all stopped and running services or the specifies ones only. Restarts service if it terminates
+    #restart can save time, bcs we dont have to start container every time we reboot machine manually
     restart: always
 
-    #<env> is used to adjust the env of the docker-compose command itself.Adds env vars to the container based on file content
+    #we define envs for database authentification.Adds env vars to the container based on file content
     #It is useful for var inside YAML file that need to be expanded, or vars used by compose itself.
     env_file: .env
 
@@ -27,17 +30,17 @@ services:
     #<volumes> basically mounts the volume db from host into /var/lib/mysql in the running mariadb container
     volumes:
       - db:/var/lib/mysql
-    
-    #<networks> we make sure that the containers we want to talk to each other are on the same network.
-    #Networks are first-class docker construct,and not specific to compose.
+
+    # <networks> we make sure that the containers we want to talk to each other are on the same network.
+    # Networks are first-class docker construct,and not specific to compose.
     networks:
-      - startup
+      - inception
 
   ####### WORDPRESS IMAGE#######
   wordpress:
     container_name: wordpress
 
-    build: ./servers/wordpress
+    build: ./services/wordpress
 
     env_file: .env
 
@@ -50,7 +53,8 @@ services:
     #we add container wordpress to the start-up network
     #it specifies that our application service will join the app-network network, which we vwill define at the bottom of the file.
     networks:
-      - startup
+      - inception
+
 
     #<depends_on> expresses startup and shutdown dependencies between services
     #Compose implementations must create services in dependency order.
@@ -58,34 +62,32 @@ services:
     depends_on:
       - mariadb
 
-
   ####### NGINX IMAGE#######
   nginx:
     container_name: nginx
 
-    build: ./servers/nginx
-
+    build: ./services/nginx
+    # entrypoint: ["sh", "-c", "sleep 2073600"]
     hostname: localhost
 
     volumes:
       - wp:/var/www/html/wordpress
-    
+
     networks:
-      - startup
+      - inception
 
     depends_on:
       - wordpress
+      - mariadb
 
     #<ports> sets host IP, host port and container port in the form:
     #[HOST(our computer): ] : CONTAINER[/PROTOCOL]
     #we define this port to map the container to the local machine.
     ports:
       - "443:443"
+    env_file: .env
 
 
-  #named volumes. The path to the actual volume is handled by docker internals and the contents of that volume will
-  #persist through the containers lifecycle even when stopped/removed. The top-level volumes must be removed manually.
-  #<volumes> allows for more detailed configuration of each volume that is defined. 
   #If we use volume driver we can provide options for it. Then in each service, we can reference the volume by name
   #without having to specify the options again.If we have multiple services using volume we change the definition of it in one place
   #Volume section allows the configuration of named volumes that can be reused across multiple services.
@@ -96,6 +98,7 @@ volumes:
   db:
     name: db
     driver: local
+    #<driver_opts> specifies a list of options as key-value pairs to pass to the driver for this network.
     driver_opts:
       type: none
       o: bind
@@ -109,12 +112,9 @@ volumes:
       device: /home/${USER}/data/wp
 
 
-  #NEtworks are the layer that allow services to communicate with each other.
-  #NETWORKS can be created by specifying the network name under a top-level networks section.
-  #Services can connect to networks by specifying the network name under the service networks subsection.
-  #With help of bridge network mariadb,nginx and db can communicate with each other and we just need to open port 440 for external access to application
+#we create virtual network between containers, which is only visible for these conts.
 networks:
-  startup:
+  inception:
     driver: bridge
 
 

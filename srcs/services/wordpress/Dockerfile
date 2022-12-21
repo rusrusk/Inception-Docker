@@ -13,9 +13,8 @@ RUN apt update && apt install -y php7.3 php-mysqli php-fpm curl
 #COPY [--chown=<user>:<group>] <src>... <dest>
 #The <COPY> instruction copies new files or directories from <src> and adds them to filesystem of the container at the path<dest>
 # Php-fpm service creates a default pool, the config-ion (www.conf) for which can be found in /etc/php/7.3/fpm/pool.d folder
-#
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
-#www where is commoin location for webpage file
+#www where is common location for webpage file
 COPY ./tools /var/www/
 
 

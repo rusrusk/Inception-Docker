@@ -26,7 +26,7 @@ define( 'DB_NAME', 'wordpress' );
 define( 'DB_USER', 'rkultaev' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', 'rk111097' );
+define( 'DB_PASSWORD', 'rkultaev222' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'mariadb' );
@@ -83,7 +83,7 @@ define( 'WP_DEBUG', false );
 
 /** Absolute path to the WordPress directory. */
 if ( ! defined( 'ABSPATH' ) ) {
-	define( 'ABSPATH', __DIR__ . '/' );
+	define( 'ABSPATH', __DIR__ . 'var/www/html/wordpress' );
 }
 
 /** Sets up WordPress vars and included files. */

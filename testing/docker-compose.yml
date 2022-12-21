@@ -2,11 +2,25 @@ version: '3.9'
 
 services:
   nginx:
-    build: ./nginx
+    container_name: nginx_test
+    build:
+      context: ./nginx/
+    networks:
+      - internal
     volumes:
-      - ./public/html:/var/www/html
-      - ./nginx/conf:/etc/nginx/conf/
-    restart: always
+      - ./logs/nginx.log:/var/log/nginx/
+      - ./data/:/var/www/html/
+    tty: true
     ports:
-      - "80:80"
-    container_name: nginx_html
+      - "8080:80"
+  php:
+    container_name: php_test
+    build: ./nginx/
+    networks:
+      - internal
+    volumes:
+      - ./logs/php.log:/var/log/fpm-php.www.log
+      - ./data/:/var/www/html/
+networks:
+  internal:
+    driver: bridge

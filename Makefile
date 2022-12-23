@@ -1,7 +1,6 @@
 COMPOSE_FILE			=			srcs/docker-compose.yml
 
 all	: build
-#		docker-compose -f ./srcs/docker-compose.yml up -d
 
 build :
 			@echo "$(YELLOW)Building files for volumes ... $(RESET)"
@@ -19,13 +18,6 @@ detach :
 			@echo "$(YELLOW) Building containers in the background ... $(RESET)"
 			@docker-compose -f $(COMPOSE_FILE) up -d --build
 			@echo "$(GREEN) Containers have been successfully built in the background! $(RESET)"
-
-# debug :
-# 			@echo "Building files for volumes ..."
-# 			@mkdir -p /home/${USER}/data/db/
-# 			@mkdir -p /home/${USER}/data/wp/
-# 			@echo "Building containers with log data ..."
-# 			@docker-compose -f $(COMPOSE_FILE) --verbose up
 
 #We can launch our containers utilizing command <docker-compose up>,
 #that will create and invoke our containers and dependencies in order.

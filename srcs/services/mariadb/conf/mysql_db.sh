@@ -1,0 +1,1 @@
+# (sleep; mariadb -u wordpress --password=$(WORDPRESS_DB_))

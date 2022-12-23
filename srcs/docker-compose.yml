@@ -88,6 +88,15 @@ services:
     env_file: .env
 
 
+    ####### STATIC WEBSITE#######
+  html:
+    build: ./services/bonus/html
+    container_name: html
+    networks:
+      - inception
+    ports:
+      - 3000:3000
+
   #If we use volume driver we can provide options for it. Then in each service, we can reference the volume by name
   #without having to specify the options again.If we have multiple services using volume we change the definition of it in one place
   #Volume section allows the configuration of named volumes that can be reused across multiple services.

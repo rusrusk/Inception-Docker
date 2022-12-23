@@ -54,9 +54,9 @@ echo "Admin user has been created!"
 # Possible values ​​include "administrator", "editor", "author", "contributor", "subscriber".
 #	[--user_pass=<password>]
 # User password. Default: randomly generated
-wp user create --allow-root ${WORDPRESS_USER_LOGIN} ${WORDPRESS_USER_EMAIL} --user_pass=${WORDPRESS_USER_PASSWORD} --role=author --allow-root;
+wp user create --allow-root ${WORDPRESS_USER_LOGIN} ${WORDPRESS_USER_EMAIL} --role=contributor --user_pass=${WORDPRESS_USER_PASSWORD};
 # Theme for WordPress
-wp theme install inspiro --activate --allow-root
+# wp theme install inspiro --activate --allow-root
 
 
 echo "Wordpress: set up!"
